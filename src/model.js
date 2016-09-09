@@ -67,18 +67,16 @@ var unregisterGetter=function(name) {
 	registerGetter(name);
 }
 
-var store={
-	listen:function(event,cb,element){
-		listeners.push([element,event,cb]);
+var	listen=function(event,cb,element){
+	listeners.push([element,event,cb]);
+}
+var unlistenAll=function(element){
+	if (!element) {
+		console.error("unlistenAll should specify this")
 	}
-	,unlistenAll:function(element){
-		if (!element) {
-			console.error("unlistenAll should specify this")
-		}
-		listeners=listeners.filter(function(listener){
-			return (listener[0]!==element) ;
-		});
-	}
+	listeners=listeners.filter(function(listener){
+		return (listener[0]!==element) ;
+	});
 }
 
-module.exports={ action, store, getter, registerGetter, unregisterGetter, hasGetter};
+module.exports={ action, listen, unlistenAll, getter, registerGetter, unregisterGetter, hasGetter};

@@ -1,12 +1,32 @@
 var React=require("react");
 var E=React.createElement;
+var PT=React.PropTypes;
 var ResultList=require("./resultlist");
 var styles={
 	tofind:{margin:5,fontSize:"120%",width:"90%"}
 }
 var SearchPanel=React.createClass({
-	getInitialState:function(){
+	contextTypes:{
+		listen:PT.func.isRequired,
+		unlistenAll:PT.func.isRequired
+	}
+	,getInitialState:function(){
 		return {value:"金石",tofind:""}
+	}
+	,componentDidMount:function(){
+		this.context.listen("setTofind",this.setTofind,this);
+		if (this.state.value) {
+			setTimeout(function(){
+				this.dofilter();
+			}.bind(this),100);
+		}
+	}
+	,componentWillUnmount:function(){
+		this.context.unlistenAll(this);
+	}
+	,setTofind:function(tofind){
+		console.log("set tofind",tofind)
+		this.setState({tofind,value:tofind});
 	}
 	,dofilter:function(){
 		if (this.state.tofind!==this.state.value) {

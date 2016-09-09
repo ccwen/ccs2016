@@ -3,11 +3,28 @@ var E=React.createElement;
 var PT=React.PropTypes;
 var MaxItem=500;
 var styles={
-	title:{fontSize:"80%",background:"#ffff7f"}
+	title:{fontSize:"80%",color:"#0f0f0f"},
+	coll:{fontSize:"80%",color:"#0f0f7f"}
 }
 var TitleResult=React.createClass({
-	renderItem:function(item,key){
-		return E("div",{key,style:styles.title},item[0]);
+	propTypes:{
+		highlight:PT.func.isRequired,
+		titles:PT.array.isRequired
+	}
+	,getDefaultProps:function(){
+		return {titles:[]};
+	}
+	,contextTypes:{
+		getter:PT.func.isRequired
+	}
+	,renderColl:function(nTitle){
+		var res=this.context.getter("collOf",nTitle);// [CollCaption,nColl]
+		return E("span",{style:styles.coll}
+			,E("button",{"data-n":res[1],style:styles.coll},res[0]));
+	}
+	,renderItem:function(item,key){
+		return E("div",{key,style:styles.title},this.props.highlight(item[0]),
+			this.renderColl(item[1]));
 	}
 	,shouldComponentUpdate:function(nextProps){
 		return (nextProps.titles!==this.props.titles);

@@ -3,18 +3,35 @@ var E=React.createElement;
 var PT=React.PropTypes;
 var MaxItem=500;
 var styles={
-	coll:{fontSize:"80%",background:"#7fff7f"}
+	coll:{fontSize:"80%",color:"#0f0f7f"}
 }
 var CollResult=React.createClass({
+	getDefaultProps:function(){
+		return {colls:[]}
+	}
+	,propType:{
+		highlight:PT.func.isRequired,
+		colls:PT.array.isRequired
+	},
+	contextTypes:{
+		action:PT.func.isRequired,
+		getter:PT.func.isRequired
+	}
+	,goColl:function(e){
+		this.context.action("showColl",e.target.dataset.n);
+	},
+	renderTitle:function(nColl){
+		var n=this.context.getter("totalTitle",nColl);
+		return E("button",{onClick:this.goColl,"data-n":n},n);
+	},
 	renderItem:function(item,key){
-		return E("div",{key,style:styles.coll},item[0]);
+		return E("div",{key,style:styles.coll}
+			,this.props.highlight(item[0]),this.renderTitle(item[1]));
 	}
 	,shouldComponentUpdate:function(nextProps){
 		return (nextProps.colls!==this.props.colls);
 	}
-	,getDefaultProps:function(){
-		return {colls:[]}
-	}
+
 	,render:function(){
 		var colls=this.props.colls;
 		if (this.props.colls.length>MaxItem) {

@@ -6,6 +6,13 @@ var styles={
 	authorbutton:{fontSize:"80%"}
 }
 var AuthorResult=React.createClass({
+	contextTypes:{
+		action:PT.func.isRequired
+	},
+	listBookByAuthor:function(e){
+		var author=e.target.dataset.author;
+		this.context.action("setTofind","@"+author);
+	},
 	renderAuthorButton:function(){
 		var authors=this.props.authors;
 		var max=authors.length;
@@ -13,7 +20,10 @@ var AuthorResult=React.createClass({
 		if (max>MaxButton) max=MaxButton;
 		for (var i=0;i<max;i++) {
 			var item=authors[i];
-			out.push(E("button",{key:i,style:styles.authorbutton},item[0]));
+			out.push(E("button",{key:i,style:styles.authorbutton
+					,onClick:this.listBookByAuthor
+					,"data-author":item[0]}
+				,item[0]));
 		}
 		return out;
 	}

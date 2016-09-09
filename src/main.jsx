@@ -3,7 +3,7 @@ var E=React.createElement;
 var PT=React.PropTypes;
 var SearchPanel=require("./searchpanel");
 var BookView=require("./bookview");
-var {action,store,getter,registerGetter,unregisterGetter}=require("./model");
+var {action,listen,unlistenAll,getter,registerGetter,unregisterGetter}=require("./model");
 
 var styles={
   container:{display:"flex"},
@@ -15,14 +15,15 @@ var maincomponent = React.createClass({
     return {};
   }
   ,childContextTypes: {
-    store: PT.object
+    listen: PT.func
+    ,unlistenAll: PT.func
     ,action: PT.func
     ,getter: PT.func
     ,registerGetter:PT.func
     ,unregisterGetter:PT.func
   }
   ,getChildContext:function(){
-    return {action,store,getter,registerGetter,unregisterGetter};
+    return {action,listen,unlistenAll,getter,registerGetter,unregisterGetter};
   }
   ,render: function() {
     return E("div",{style:styles.container},
