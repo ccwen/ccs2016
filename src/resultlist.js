@@ -18,7 +18,6 @@ var ResultList=React.createClass({
 		if (tofind[0]=="@") {
 			//TODO find coll by author(compiler)
 			this.context.getter("titleByAuthor",tofind.substr(1),function(titles){
-				console.log(titles)
 				this.setState({titles,authors:[],colls:[]});
 			}.bind(this));
 		} else {

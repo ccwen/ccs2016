@@ -15,12 +15,17 @@ var TitleResult=React.createClass({
 		return {titles:[]};
 	}
 	,contextTypes:{
-		getter:PT.func.isRequired
+		getter:PT.func.isRequired,
+		action:PT.func.isRequired
+	}
+	,showTitle:function(e){
+		this.context.action("showTitle",e.target.dataset.title);
 	}
 	,renderColl:function(nTitle){
 		var res=this.context.getter("collOf",nTitle);// [CollCaption,nColl]
 		return E("span",{style:styles.coll}
-			,E("button",{"data-n":res[1],style:styles.coll},res[0]));
+			,E("button",{"data-title":nTitle,
+				style:styles.coll,onClick:this.showTitle},res[0]));
 	}
 	,renderItem:function(item,key){
 		return E("div",{key,style:styles.title},this.props.highlight(item[0]),

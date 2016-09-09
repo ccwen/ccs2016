@@ -1,9 +1,12 @@
 var React=require("react");
+var ReactDOM=require("react-dom");
 var E=React.createElement;
 var PT=React.PropTypes;
 var ResultList=require("./resultlist");
 var styles={
-	tofind:{margin:5,fontSize:"120%",width:"90%"}
+	tofind:{margin:5,fontSize:"120%",width:"90%",background:"silver"},
+	scroller:{height:"100%",overflowY:"auto"},
+	inputBox:{position:"fixed",zIndex:200 ,left:200,top:5,opacity:0.8}
 }
 var SearchPanel=React.createClass({
 	contextTypes:{
@@ -25,7 +28,6 @@ var SearchPanel=React.createClass({
 		this.context.unlistenAll(this);
 	}
 	,setTofind:function(tofind){
-		console.log("set tofind",tofind)
 		this.setState({tofind,value:tofind});
 	}
 	,dofilter:function(){
@@ -37,6 +39,7 @@ var SearchPanel=React.createClass({
 		this.setState({value:e.target.value});
 		clearTimeout(this.timer);
 		this.timer=setTimeout(function(){
+			ReactDOM.findDOMNode(this.refs.scroller).scrollTop=0;
 			this.dofilter();
 		}.bind(this),300);
 	}
@@ -46,11 +49,15 @@ var SearchPanel=React.createClass({
 		}
 	}
 	,render:function(){
-		return E("div",{},
-			E("input",{size:5,style:styles.tofind,
+		return E("div",{style:styles.scroller,ref:"scroller"},
+			E("div",{style:styles.inputBox},
+				E("input",{size:5,style:styles.tofind,
 				onKeyPress:this.onKeyPress,
 				onChange:this.onChange,
-				value:this.state.value}),
+				value:this.state.value})
+			),
+			E("div",{},"　"),
+			E("div",{},"　"),
 			E(ResultList,{tofind:this.state.tofind})
 		);
 	}
