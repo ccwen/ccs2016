@@ -24,7 +24,7 @@ var CollResult=React.createClass({
 	},
 	renderItem:function(item,key){
 		return E("div",{key,className:"coll"}
-			,this.props.highlight(item[0]),this.renderTitle(item[1]));
+			,key+1+".",this.props.highlight(item[0]),this.renderTitle(item[1]));
 	}
 	,shouldComponentUpdate:function(nextProps){
 		return (nextProps.colls!==this.props.colls);

@@ -27,7 +27,8 @@ var TitleResult=React.createClass({
 				style:styles.coll,onClick:this.showTitle},res[0]));
 	}
 	,renderItem:function(item,key){
-		return E("div",{key,className:"title"},this.props.highlight(item[0]),
+		return E("div",{key,className:"title"},
+			key+1+".",this.props.highlight(item[0]),
 			this.renderColl(item[1]));
 	}
 	,shouldComponentUpdate:function(nextProps){
@@ -38,11 +39,14 @@ var TitleResult=React.createClass({
 	}
 	,render:function(){
 		var titles=this.props.titles;
+		var warning=null;
 		if (this.props.titles.length>MaxItem) {
+			warning=E("span",{className:"warning"},"more than 500 titles");
 			titles=this.props.titles.slice(0,MaxItem);
 		}
 
 		return E("div",{},
+			warning,
 			titles.map(this.renderItem)
 		)
 	}

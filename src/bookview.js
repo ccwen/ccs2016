@@ -19,12 +19,12 @@ var SearchPanel=React.createClass({
 	}
 	,showColl:function(nColl){
 		nColl=parseInt(nColl);
-		this.setState({nColl,nTitle:0});
+		this.setState({nColl,nTitle:0,showloading:true});
 	}
 	,showTitle:function(nTitle){
 		nTitle=parseInt(nTitle);
 		var nColl=this.context.getter("collOf",nTitle);
-		this.setState({nTitle,nColl:nColl[1]});
+		this.setState({nTitle,nColl:nColl[1],showloading:true});
 	}
 	,searchAuthor:function(e){
 		this.context.action("setTofind","@"+e.target.innerHTML);
@@ -156,8 +156,19 @@ var SearchPanel=React.createClass({
 
 		return out;
 	}
+	,startRendering:function(){
+		if (this.state.showloading) {
+			var coll=this.context.getter("collCaption",this.state.nColl);
+			setTimeout(function(){
+				this.setState({showloading:false});
+			}.bind(this),5);
+			return "Loading "+coll;
+		} else {
+			return this.renderContent();
+		}
+	}
 	,render:function(){
-		return E("div",{style:styles.scroller},this.renderContent());
+		return E("div",{style:styles.scroller},this.startRendering());
 	}
 });
 module.exports=SearchPanel;
