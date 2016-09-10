@@ -5,8 +5,7 @@ var PT=React.PropTypes;
 var ResultList=require("./resultlist");
 var styles={
 	tofind:{margin:5,fontSize:"120%",width:"90%",background:"silver"},
-	scroller:{height:"100%",overflowY:"auto"},
-	inputBox:{position:"fixed",zIndex:200 ,left:200,top:5,opacity:0.8}
+	scroller:{height:"100%",overflowY:"auto"}
 }
 var SearchPanel=React.createClass({
 	contextTypes:{
@@ -50,7 +49,7 @@ var SearchPanel=React.createClass({
 	}
 	,render:function(){
 		return E("div",{style:styles.scroller,ref:"scroller"},
-			E("div",{style:styles.inputBox},
+			E("div",{className:"floatinginput"},
 				E("input",{size:5,style:styles.tofind,
 				onKeyPress:this.onKeyPress,
 				onChange:this.onChange,

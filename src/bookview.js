@@ -104,15 +104,29 @@ var SearchPanel=React.createClass({
 	,renderPageNumber:function(page,key){
 		return E("div",{className:"page",key},"綜錄第",page,"頁");
 	}
+	,onSelectCat:function(e){
+		var idx=e.target.selectedIndex;
+		this.refs['cat'+idx].scrollIntoView();
+	}
+	,renderCategory:function(category,idx){
+		if (!category.length)return null;
+		return E("select",{key:idx,className:"category",onChange:this.onSelectCat},
+			category.map(function(cat,key){
+				return E("option",{key},cat);
+			})
+		)
+	}
 	,renderContent:function(){
 		var content=this.context.getter("contentOf",this.state.nColl);
-		var out=[];
+		var out=[],category=[],category_select=null,collCaption;
 		var opts={nTitle:this.context.getter("firstTitle",this.state.nColl)};
 		for (var i=0;i<content.length;i++){
 			var line=content[i];
 			if (line[0]=="$") {
 				var coll=this.context.getter("collCaption",this.state.nColl);
-				out.push(E("span",{className:"coll",key:i},coll,line.replace("$","")));
+				collCaption=line.replace("$","");
+				out.push(E("div",{key:i+'br1'},"　"));
+				out.push(E("div",{key:i+'br2'},"　"));
 			} else {
 				if (line.indexOf("((")>-1) {
 					out.push(E("br",{key:i}));
@@ -124,12 +138,22 @@ var SearchPanel=React.createClass({
 				} else if (line[0]=="~") {
 					out.push(this.renderPageNumber(line.substr(1),i));
 				} else {
-					//build a subcategory links
-					out.push(line);//as it is, possible structure
+					if (line.trim()){
+						var cat=line.replace("%","").trim();
+						out.push(E("div",{key:'cat'+category.length,ref:'cat'+category.length},cat));
+						category.push(cat);
+					}
 				}
 			}
 		}
 		//insert subcategory dropdown collname
+		category_select=this.renderCategory(category,"cat");
+		//add floating coll caption with category selector
+		out.unshift(E("div",{className:"floatingColl",key:"coll"},
+				E("span",{style:styles.coll},coll,collCaption)
+				,category_select)
+				);
+
 		return out;
 	}
 	,render:function(){
