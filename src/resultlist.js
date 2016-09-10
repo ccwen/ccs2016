@@ -17,7 +17,7 @@ var ResultList=React.createClass({
 	,dosearch:function(tofind){
 		tofind=tofind||this.props.tofind;
 		if (!isNaN(parseInt(tofind))) {
-			this.context.action("showColl",parseInt(tofind));
+			this.context.action("showPage",parseInt(tofind));
 		} else if (tofind[0]=="@") {
 			//TODO find coll by author(compiler)
 			this.context.getter("titleByAuthor",tofind.substr(1).trim(),function(titles){

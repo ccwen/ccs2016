@@ -78,6 +78,10 @@ var titleCaption=function(nTitle){
 var firstTitle=function(nColl){
 	return data.collFirstTitle[nColl];
 }
+var firstTitleOfPage=function(nPage){
+	return data.firstTitleOfPage(nPage);
+}
+
 var dynastyByCode=function(dyn){
 	return data.dynastyByCode(dyn);
 }
@@ -93,4 +97,5 @@ registerGetter("titleCaption",titleCaption);
 registerGetter("libCaption",libCaption);
 registerGetter("authorCaption",authorCaption);
 registerGetter("firstTitle",firstTitle);
+registerGetter("firstTitleOfPage",firstTitleOfPage);
 registerGetter("dynastyByCode",dynastyByCode);

@@ -15,14 +15,27 @@ var SearchPanel=React.createClass({
 	}
 	,componentDidMount:function(){
 		this.context.listen("showColl" ,this.showColl, this);
+		this.context.listen("showPage" ,this.showPage, this);
 		this.context.listen("showTitle" ,this.showTitle, this);
 	}
 	,showColl:function(nColl){
 		nColl=parseInt(nColl);
 		this.setState({nColl,nTitle:0,showloading:true});
 	}
+	,showPage:function(nPage){
+		var first=this.context.getter("firstTitleOfPage",parseInt(nPage)-1);
+		this.showTitle(first);
+	}
+	,componentDidUpdate:function(){
+		if (this.scrollto) {
+			var ele=this.refs[this.scrollto];
+			ele&&ele.scrollIntoView();;
+			this.scrollto=null;
+		}
+	}
 	,showTitle:function(nTitle){
 		nTitle=parseInt(nTitle);
+		if (isNaN(nTitle))return;
 		var nColl=this.context.getter("collOf",nTitle);
 		this.setState({nTitle,nColl:nColl[1],showloading:true});
 	}
@@ -102,7 +115,7 @@ var SearchPanel=React.createClass({
 		//render Dynasty
 	}
 	,renderPageNumber:function(page,key){
-		return E("div",{className:"page",key},"綜錄第",page,"頁");
+		return E("div",{className:"page",key,ref:'pg'+page},"綜錄第",page,"頁");
 	}
 	,onSelectCat:function(e){
 		var idx=e.target.selectedIndex;
@@ -158,14 +171,14 @@ var SearchPanel=React.createClass({
 	}
 	,startRendering:function(){
 		if (this.state.showloading) {
+			//show loading message,huge collection might take a while
 			var coll=this.context.getter("collCaption",this.state.nColl);
 			setTimeout(function(){
 				this.setState({showloading:false});
 			}.bind(this),5);
-			return "Loading "+coll;
-		} else {
-			return this.renderContent();
+			return "Loading "+coll; 
 		}
+		return this.renderContent();
 	}
 	,render:function(){
 		return E("div",{style:styles.scroller},this.startRendering());
