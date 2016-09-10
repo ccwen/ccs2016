@@ -4,7 +4,7 @@ var E=React.createElement;
 var PT=React.PropTypes;
 var ResultList=require("./resultlist");
 var styles={
-	tofind:{margin:5,fontSize:"120%",width:"90%",background:"silver"},
+	tofind:{margin:5,fontSize:"120%",background:"silver"},
 	scroller:{height:"100%",overflowY:"auto"}
 }
 var SearchPanel=React.createClass({
@@ -13,7 +13,7 @@ var SearchPanel=React.createClass({
 		unlistenAll:PT.func.isRequired
 	}
 	,getInitialState:function(){
-		return {value:"學海",tofind:""}
+		return {value:"學海",tofind:"",oldTofind:""}
 	}
 	,componentDidMount:function(){
 		this.context.listen("setTofind",this.setTofind,this);
@@ -27,7 +27,11 @@ var SearchPanel=React.createClass({
 		this.context.unlistenAll(this);
 	}
 	,setTofind:function(tofind){
-		this.setState({tofind,value:tofind});
+		var oldTofind=this.state.oldTofind;
+		if (tofind[0]=="@" && this.state.tofind[0]!=="@") {
+			oldTofind=this.state.tofind;
+		}
+		this.setState({tofind,value:tofind,oldTofind});
 	}
 	,dofilter:function(){
 		if (this.state.tofind!==this.state.value) {
@@ -47,13 +51,22 @@ var SearchPanel=React.createClass({
 			this.dofilter();
 		}
 	}
+	,setOldTofind:function(){
+		this.setState({value:this.state.oldTofind,tofind:this.state.oldTofind,oldTofind:""});
+	}
+	,renderOldTofind:function(){
+		if (this.state.oldTofind){
+			return E("span",{onClick:this.setOldTofind,className:"oldtofind"},this.state.oldTofind);
+		}
+	}
 	,render:function(){
 		return E("div",{style:styles.scroller,ref:"scroller"},
 			E("div",{className:"floatinginput"},
 				E("input",{size:5,style:styles.tofind,
 				onKeyPress:this.onKeyPress,
 				onChange:this.onChange,
-				value:this.state.value})
+				value:this.state.value}),
+				this.renderOldTofind()
 			),
 			E("div",{},"　"),
 			E("div",{},"　"),
