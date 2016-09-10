@@ -11,13 +11,16 @@ var ResultList=React.createClass({
 		return {result:[],authors:[]}
 	}
 	,contextTypes:{
-		getter:PT.func.isRequired
+		getter:PT.func.isRequired,
+		action:PT.func.isRequired
 	}
 	,dosearch:function(tofind){
 		tofind=tofind||this.props.tofind;
-		if (tofind[0]=="@") {
+		if (!isNaN(parseInt(tofind))) {
+			this.context.action("showColl",parseInt(tofind));
+		} else if (tofind[0]=="@") {
 			//TODO find coll by author(compiler)
-			this.context.getter("titleByAuthor",tofind.substr(1),function(titles){
+			this.context.getter("titleByAuthor",tofind.substr(1).trim(),function(titles){
 				this.setState({titles,authors:[],colls:[]});
 			}.bind(this));
 		} else {
@@ -58,7 +61,8 @@ var ResultList=React.createClass({
 				,highlight:this.highlight}),
 			E(TitleResult,{titles:this.state.titles
 				,highlight:this.highlight}),
-			this.state.result.map(this.renderItem));
+				this.state.result.map(this.renderItem)
+		);
 	}
 });
 module.exports=ResultList;

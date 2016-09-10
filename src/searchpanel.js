@@ -14,7 +14,7 @@ var SearchPanel=React.createClass({
 		unlistenAll:PT.func.isRequired
 	}
 	,getInitialState:function(){
-		return {value:"金石",tofind:""}
+		return {value:"學海",tofind:""}
 	}
 	,componentDidMount:function(){
 		this.context.listen("setTofind",this.setTofind,this);

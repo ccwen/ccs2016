@@ -2,3 +2,12 @@
 body {margin:0px;}
 #main {font-size:200%;}
 .hl {color:red;}
+.coll {color:darkblue;font-family: Microsoft JhengHei;}
+.version {color:brown;font-size:80%}
+.lib {font-size:70%;}
+.page {color:green;font-size:70%}
+.title {color:blue;}
+.cat {color:brown}
+.juan{color:darkgreen;}
+.author{color:teal;cursor:pointer;font-family: DFKai-SB}
+.dyn{color:gray;font-size:60%;}

@@ -3,7 +3,6 @@ var E=React.createElement;
 var PT=React.PropTypes;
 var MaxItem=500;
 var styles={
-	title:{fontSize:"80%",color:"#0f0f0f"},
 	coll:{fontSize:"80%",color:"#0f0f7f"}
 }
 var TitleResult=React.createClass({
@@ -23,12 +22,12 @@ var TitleResult=React.createClass({
 	}
 	,renderColl:function(nTitle){
 		var res=this.context.getter("collOf",nTitle);// [CollCaption,nColl]
-		return E("span",{style:styles.coll}
+		return E("span",{className:"coll",key:"1"}
 			,E("button",{"data-title":nTitle,
 				style:styles.coll,onClick:this.showTitle},res[0]));
 	}
 	,renderItem:function(item,key){
-		return E("div",{key,style:styles.title},this.props.highlight(item[0]),
+		return E("div",{key,className:"title"},this.props.highlight(item[0]),
 			this.renderColl(item[1]));
 	}
 	,shouldComponentUpdate:function(nextProps){

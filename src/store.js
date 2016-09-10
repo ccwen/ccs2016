@@ -59,9 +59,38 @@ var collOf=function(nTitle){
 	var nColl=data.collOf(nTitle);
 	if (nColl>=0) return [data.colls[nColl],nColl];
 }
+var contentOf=function(nColl){
+	//find up content with markups
+	return data.contentOf(nColl);
+}
+var collCaption=function(nColl){
+	return data.colls[nColl];
+}
+var libCaption=function(nLib){
+	return data.libs[nLib];
+}
+var authorCaption=function(nAuthor){
+	return data.authors[nAuthor];
+}
+var titleCaption=function(nTitle){
+	return data.titles[nTitle];
+}
+var firstTitle=function(nColl){
+	return data.collFirstTitle[nColl];
+}
+var dynastyByCode=function(dyn){
+	return data.dynastyByCode(dyn);
+}
 registerGetter("filterAuthor",filterAuthor);
 registerGetter("titleByAuthor",titleByAuthor);
 registerGetter("filterTitle",filterTitle);
 registerGetter("filterColl",filterColl);
 registerGetter("collOf",collOf);
 registerGetter("totalTitle",totalTitle);
+registerGetter("contentOf",contentOf);
+registerGetter("collCaption",collCaption);
+registerGetter("titleCaption",titleCaption);
+registerGetter("libCaption",libCaption);
+registerGetter("authorCaption",authorCaption);
+registerGetter("firstTitle",firstTitle);
+registerGetter("dynastyByCode",dynastyByCode);

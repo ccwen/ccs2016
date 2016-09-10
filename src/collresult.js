@@ -2,9 +2,7 @@ var React=require("react");
 var E=React.createElement;
 var PT=React.PropTypes;
 var MaxItem=500;
-var styles={
-	coll:{fontSize:"80%",color:"#0f0f7f"}
-}
+
 var CollResult=React.createClass({
 	getDefaultProps:function(){
 		return {colls:[]}
@@ -21,11 +19,11 @@ var CollResult=React.createClass({
 		this.context.action("showColl",e.target.dataset.n);
 	},
 	renderTitle:function(nColl){
-		var n=this.context.getter("totalTitle",nColl);
-		return E("button",{onClick:this.goColl,"data-n":n},n);
+		var total=this.context.getter("totalTitle",nColl);
+		return E("button",{onClick:this.goColl,"data-n":nColl},total);
 	},
 	renderItem:function(item,key){
-		return E("div",{key,style:styles.coll}
+		return E("div",{key,className:"coll"}
 			,this.props.highlight(item[0]),this.renderTitle(item[1]));
 	}
 	,shouldComponentUpdate:function(nextProps){
