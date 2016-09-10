@@ -67,7 +67,8 @@ var SearchPanel=React.createClass({
 	,render:function(){
 		return E("div",{style:styles.scroller,ref:"scroller"},
 			E("div",{className:"floatinginput"},
-				E("input",{size:5,style:styles.tofind,
+				E("input",{size:5,style:styles.tofind,ref:"input",
+					placeholder:"查詢條件",
 				onKeyPress:this.onKeyPress,
 				onChange:this.onChange,
 				value:this.state.value}),
