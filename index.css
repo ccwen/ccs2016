@@ -8,6 +8,7 @@ body {margin:0px;}
 .lib {font-size:70%;}
 .page {color:green;font-size:70%}
 .title {color:blue;}
+.title_hl {color:white;background:#7f7fff;}
 .cat {color:brown}
 .juan{color:darkgreen;}
 .author{color:teal;cursor:pointer;font-family: DFKai-SB}

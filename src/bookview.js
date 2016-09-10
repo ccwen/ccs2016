@@ -25,6 +25,7 @@ var SearchPanel=React.createClass({
 	,showPage:function(nPage){
 		var first=this.context.getter("firstTitleOfPage",parseInt(nPage)-1);
 		this.showTitle(first);
+		this.scrollto='pg'+nPage;//overwrite scrollto
 	}
 	,componentDidUpdate:function(){
 		if (this.scrollto) {
@@ -38,6 +39,7 @@ var SearchPanel=React.createClass({
 		if (isNaN(nTitle))return;
 		var nColl=this.context.getter("collOf",nTitle);
 		this.setState({nTitle,nColl:nColl[1],showloading:true});
+		this.scrollto='t'+nTitle;
 	}
 	,searchAuthor:function(e){
 		this.context.action("setTofind","@"+e.target.innerHTML);
@@ -73,13 +75,18 @@ var SearchPanel=React.createClass({
 			if (line[i]=="@") {
 				emitNormalText(i);
 				var title=this.context.getter("titleCaption",opts.nTitle);
-				opts.nTitle++;
-				out.push(E("span",{className:"title",key:i},title));
+				var obj={className:"title",key:i};
+				if (opts.nTitle==this.state.nTitle) {
+					obj.ref='t'+opts.nTitle;
+					obj.className='title_hl';
+				}
+				out.push(E("span",obj,title));
 				var m=line.substr(i+1).match(/(\d+)/);
 				if (m) {
 					out.push(E("span",{className:"juan",key:'j'+i},m[0],"卷 "));
 					i+=m[0].length;
 				}
+				opts.nTitle++;
 			} else if (line[i]=="#"){
 				emitNormalText(i);
 				var m=line.substr(i+1).match(/([0-9a-f]+)/);
