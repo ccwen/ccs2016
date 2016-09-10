@@ -1,4 +1,5 @@
 var React=require("react");
+var ReactDOM=require("react-dom");
 var E=React.createElement;
 var PT=React.PropTypes;
 var styles={
@@ -30,7 +31,9 @@ var SearchPanel=React.createClass({
 	,componentDidUpdate:function(){
 		if (this.scrollto) {
 			var ele=this.refs[this.scrollto];
-			ele&&ele.scrollIntoView();;
+			ele&&ele.scrollIntoView();
+			//move slightly above coll floating
+			ReactDOM.findDOMNode(this.refs.scroller).scrollTop-=60;
 			this.scrollto=null;
 		}
 	}
@@ -80,8 +83,10 @@ var SearchPanel=React.createClass({
 					obj.ref='t'+opts.nTitle;
 					obj.className='title_hl';
 				}
+				if (title[0]=="!") title=title.substr(1);
+				if (title[0]=="-") title="　"+title.substr(1);
 				out.push(E("span",obj,title));
-				var m=line.substr(i+1).match(/(\d+)/);
+				var m=line.substr(i+1).match(/^(\d+)/);
 				if (m) {
 					out.push(E("span",{className:"juan",key:'j'+i},m[0],"卷 "));
 					i+=m[0].length;
@@ -91,7 +96,7 @@ var SearchPanel=React.createClass({
 				emitNormalText(i);
 				var m=line.substr(i+1).match(/([0-9a-f]+)/);
 				if (m) {
-					var nAuthor=parseInt(m,16)-1;
+					var nAuthor=parseInt(m,16);
 					var author=this.context.getter("authorCaption",nAuthor);
 					out.push(E("span",{className:"author",key:'a'+i,
 						onClick:this.searchAuthor},author+" "));
@@ -99,14 +104,16 @@ var SearchPanel=React.createClass({
 				}
 				
 			} else {
-				var m=line.substr(i,2).match(/[A-Z]+/);
+				var m=line.substr(i,2).match(/^[A-Z]+/);
 				if (m) {
-					i+=(m[0].length-1);
 					var dyn=this.context.getter("dynastyByCode",m[0]);
 					if (dyn) {
-						out.push(E("span",{className:"dyn",key:'d'+i},dyn));
+						emitNormalText(i);
+						i+=(m[0].length-1);
+						out.push(E("span",{className:"dyn","data-n":'d'+i,key:'d'+i},dyn));
 					} else{
 						text+=m[0];
+						i+=(m[0].length-1);
 					}
 				} else {
 					text+=line[i];	
@@ -188,7 +195,7 @@ var SearchPanel=React.createClass({
 		return this.renderContent();
 	}
 	,render:function(){
-		return E("div",{style:styles.scroller},this.startRendering());
+		return E("div",{ref:"scroller",style:styles.scroller},this.startRendering());
 	}
 });
 module.exports=SearchPanel;
