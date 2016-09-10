@@ -54,7 +54,13 @@ var ResultList=React.createClass({
 	,renderItem:function(item,key){
 		return E("div",{key},item);
 	}
+	,showHelp:function(){
+		return E("span",{},"help");
+	}
 	,render:function(){
+		if (!this.props.tofind) {
+			return this.showHelp();
+		}
 		return E("div",{},
 			E(AuthorResult,{authors:this.state.authors}),
 			E(CollResult,{colls:this.state.colls

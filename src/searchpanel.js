@@ -13,7 +13,8 @@ var SearchPanel=React.createClass({
 		unlistenAll:PT.func.isRequired
 	}
 	,getInitialState:function(){
-		return {value:"學海",tofind:"",oldTofind:""}
+		var value=document.location.hash.substr(1)||localStorage.getItem("ccs2016_tofind")||"";
+		return {value,tofind:"",oldTofind:""}
 	}
 	,componentDidMount:function(){
 		this.context.listen("setTofind",this.setTofind,this);
@@ -35,6 +36,10 @@ var SearchPanel=React.createClass({
 	}
 	,dofilter:function(){
 		if (this.state.tofind!==this.state.value) {
+			if (this.state.value[0]!="@"){
+				localStorage.setItem("ccs2016_tofind",this.state.value);	
+				document.location.hash=this.state.value;
+			}
 			this.setState({tofind:this.state.value});
 		}
 	}
