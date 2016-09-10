@@ -5,7 +5,7 @@ var PT=React.PropTypes;
 var AuthorResult=require("./authorresult");
 var CollResult=require("./collresult");
 var TitleResult=require("./titleresult");
-
+var RightHelp=require("./righthelp");
 var ResultList=React.createClass({
 	getInitialState:function(){
 		return {result:[],authors:[]}
@@ -55,7 +55,7 @@ var ResultList=React.createClass({
 		return E("div",{key},item);
 	}
 	,showHelp:function(){
-		return E("span",{},"help");
+		return E(RightHelp);
 	}
 	,render:function(){
 		if (!this.props.tofind) {

@@ -40,8 +40,12 @@ var TitleResult=React.createClass({
 	,render:function(){
 		var titles=this.props.titles;
 		var warning=null;
+		if (!this.props.titles.length){
+			return E("div",{},"查無資料");
+		}
+
 		if (this.props.titles.length>MaxItem) {
-			warning=E("span",{className:"warning"},"more than 500 titles");
+			warning=E("span",{className:"warning"},"共有"+this.props.titles.length+"筆，只列出前500筆");
 			titles=this.props.titles.slice(0,MaxItem);
 		}
 

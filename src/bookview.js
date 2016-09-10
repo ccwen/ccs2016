@@ -33,7 +33,7 @@ var SearchPanel=React.createClass({
 			var ele=this.refs[this.scrollto];
 			ele&&ele.scrollIntoView();
 			//move slightly above coll floating
-			ReactDOM.findDOMNode(this.refs.scroller).scrollTop-=60;
+			this.unhideCollCaption();
 			this.scrollto=null;
 		}
 	}
@@ -131,9 +131,13 @@ var SearchPanel=React.createClass({
 	,renderPageNumber:function(page,key){
 		return E("div",{className:"page",key,ref:'pg'+page},"綜錄第",page,"頁");
 	}
+	,unhideCollCaption:function(){
+		ReactDOM.findDOMNode(this.refs.scroller).scrollTop-=60;
+	}
 	,onSelectCat:function(e){
 		var idx=e.target.selectedIndex;
 		this.refs['cat'+idx].scrollIntoView();
+		this.unhideCollCaption();
 	}
 	,renderCategory:function(category,idx){
 		if (!category.length)return null;

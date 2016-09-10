@@ -35,7 +35,7 @@ var AuthorResult=React.createClass({
 	}
 	,renderCount:function(){
 		if (this.props.authors.length<MaxButton) return;
-		return E("span",{},this.props.authors.length,"authors")
+		return E("span",{},"還有"+(this.props.authors.length-MaxButton),"位出者未列出")
 	}
 	,render:function(){
 		return E("div",{},
