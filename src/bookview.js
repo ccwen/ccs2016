@@ -2,6 +2,7 @@ var React=require("react");
 var ReactDOM=require("react-dom");
 var E=React.createElement;
 var PT=React.PropTypes;
+var MaxRange=200;
 var styles={
 	scroller:{height:"100%",overflowY:"auto",overflowWrap:"normal"}
 }
@@ -25,11 +26,11 @@ var SearchPanel=React.createClass({
 	}
 	,showPage:function(nPage){
 		var first=this.context.getter("firstTitleOfPage",parseInt(nPage)-1);
-		this.showTitle(first);
 		this.scrollto='pg'+nPage;//overwrite scrollto
+		this.showTitle(first);
 	}
 	,componentDidUpdate:function(){
-		if (this.scrollto) {
+		if (this.scrollto && !this.state.showloading) {
 			var ele=this.refs[this.scrollto];
 			ele&&ele.scrollIntoView();
 			//move slightly above coll floating
@@ -41,8 +42,8 @@ var SearchPanel=React.createClass({
 		nTitle=parseInt(nTitle);
 		if (isNaN(nTitle))return;
 		var nColl=this.context.getter("collOf",nTitle);
-		this.setState({nTitle,nColl:nColl[1],showloading:true});
 		this.scrollto='t'+nTitle;
+		this.setState({nTitle,nColl:nColl[1],showloading:true});
 	}
 	,searchAuthor:function(e){
 		this.context.action("setTofind","@"+e.target.innerHTML);
@@ -69,12 +70,14 @@ var SearchPanel=React.createClass({
 	,renderBookTitle:function(line,key,opts){
 		var i=0,out=[],text="";;
 		var emitNormalText=function(key){
-			if (text) {
+			if (text&inrange) {
 				out.push(E("span",{key:'t'+key},text));
 				text="";
 			}
 		}
 		while (i<line.length){
+			var inrange=(Math.abs(this.state.nTitle-opts.nTitle)<MaxRange);
+
 			if (line[i]=="@") {
 				emitNormalText(i);
 				var title=this.context.getter("titleCaption",opts.nTitle);
@@ -85,24 +88,29 @@ var SearchPanel=React.createClass({
 				}
 				if (title[0]=="!") title=title.substr(1);
 				if (title[0]=="-") title="　"+title.substr(1);
-				out.push(E("span",obj,title));
+				inrange&&out.push(E("span",obj,title));
 				var m=line.substr(i+1).match(/^(\d+)/);
 				if (m) {
-					out.push(E("span",{className:"juan",key:'j'+i},m[0],"卷 "));
-					i+=m[0].length;
+						inrange&&out.push(E("span",{className:"juan",key:'j'+i},m[0],"卷 "));
+						i+=m[0].length;
 				}
 				opts.nTitle++;
+				if (this.state.nTitle-opts.nTitle==MaxRange) {
+					out.push(E("span",{key:'w'+i,className:"warning"},"以上子目隱藏"));	
+				}
+				if (opts.nTitle-this.state.nTitle==MaxRange) {
+					out.push(E("span",{key:'w'+i,className:"warning"},"以下子目隱藏"));
+				}					
 			} else if (line[i]=="#"){
 				emitNormalText(i);
 				var m=line.substr(i+1).match(/([0-9a-f]+)/);
 				if (m) {
 					var nAuthor=parseInt(m,16);
 					var author=this.context.getter("authorCaption",nAuthor);
-					out.push(E("span",{className:"author",key:'a'+i,
+					inrange&&out.push(E("span",{className:"author",key:'a'+i,
 						onClick:this.searchAuthor},author+" "));
 					i+=m[0].length;
 				}
-				
 			} else {
 				var m=line.substr(i,2).match(/^[A-Z]+/);
 				if (m) {
@@ -110,7 +118,7 @@ var SearchPanel=React.createClass({
 					if (dyn) {
 						emitNormalText(i);
 						i+=(m[0].length-1);
-						out.push(E("span",{className:"dyn","data-n":'d'+i,key:'d'+i},dyn));
+						inrange&&out.push(E("span",{className:"dyn","data-n":'d'+i,key:'d'+i},dyn));
 					} else{
 						text+=m[0];
 						i+=(m[0].length-1);
@@ -124,9 +132,6 @@ var SearchPanel=React.createClass({
 		}
 		emitNormalText();
 		return E("div",{key},out);
-		//render title
-		//render author
-		//render Dynasty
 	}
 	,renderPageNumber:function(page,key){
 		return E("div",{className:"page",key,ref:'pg'+page},"綜錄第",page,"頁");
@@ -136,8 +141,8 @@ var SearchPanel=React.createClass({
 	}
 	,onSelectCat:function(e){
 		var idx=e.target.selectedIndex;
-		this.refs['cat'+idx].scrollIntoView();
-		this.unhideCollCaption();
+		var nTitle=this.refs['cat'+idx].dataset.title;
+		this.showTitle(nTitle);
 	}
 	,renderCategory:function(category,idx){
 		if (!category.length)return null;
@@ -146,6 +151,9 @@ var SearchPanel=React.createClass({
 				return E("option",{key},cat);
 			})
 		)
+	}
+	,onCatClick:function(e){
+		this.showTitle(e.target.dataset.title);
 	}
 	,renderContent:function(){
 		var content=this.context.getter("contentOf",this.state.nColl);
@@ -171,7 +179,9 @@ var SearchPanel=React.createClass({
 				} else {
 					if (line.trim()){
 						var cat=line.replace("%","").trim();
-						out.push(E("div",{key:'cat'+category.length,ref:'cat'+category.length},cat));
+						var obj={key:'cat'+category.length,"data-title":opts.nTitle,ref:'cat'+category.length,
+						className:"clickable_cat",onClick:this.onCatClick};
+						out.push(E("div",obj,cat));	
 						category.push(cat);
 					}
 				}
