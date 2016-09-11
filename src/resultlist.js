@@ -21,7 +21,6 @@ var ResultList=React.createClass({
 		} else if (tofind[0]=="@") {
 			//TODO find coll by author(compiler)
 			var tf=tofind.substr(1).trim();
-			tf=this.context.getter("expandVariant",tf);
 
 			this.context.getter("titleByAuthor",tf,function(titles){
 				this.setState({titles,authors:[],colls:[]});
