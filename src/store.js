@@ -85,6 +85,19 @@ var firstTitleOfPage=function(nPage){
 var dynastyByCode=function(dyn){
 	return data.dynastyByCode(dyn);
 }
+var expandVariant=function(tofind){
+	var tf="",i=0;
+	while (i<tofind.length){
+		var code=tofind.charCodeAt(i);
+		var ch=tofind[i];
+		if (code>=0xd800&&code<=0xdfff){
+			ch+=tofind[++i];
+		}
+		tf+=data.variants[ch]?"["+ch+data.variants[ch]+"]":ch;
+		i++;
+	}
+	return new RegExp(tf);
+}
 registerGetter("filterAuthor",filterAuthor);
 registerGetter("titleByAuthor",titleByAuthor);
 registerGetter("filterTitle",filterTitle);
@@ -99,3 +112,4 @@ registerGetter("authorCaption",authorCaption);
 registerGetter("firstTitle",firstTitle);
 registerGetter("firstTitleOfPage",firstTitleOfPage);
 registerGetter("dynastyByCode",dynastyByCode);
+registerGetter("expandVariant",expandVariant);

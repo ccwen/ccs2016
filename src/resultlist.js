@@ -20,17 +20,22 @@ var ResultList=React.createClass({
 			this.context.action("showPage",parseInt(tofind));
 		} else if (tofind[0]=="@") {
 			//TODO find coll by author(compiler)
-			this.context.getter("titleByAuthor",tofind.substr(1).trim(),function(titles){
+			var tf=tofind.substr(1).trim();
+			tf=this.context.getter("expandVariant",tf);
+
+			this.context.getter("titleByAuthor",tf,function(titles){
 				this.setState({titles,authors:[],colls:[]});
 			}.bind(this));
 		} else {
-			this.context.getter("filterAuthor",tofind,function(authors){
+			var tf=(tofind[0]=="=")?tofind.substr(1):this.context.getter("expandVariant",tofind);	
+			this.context.getter("filterAuthor",tf,function(authors){
 				this.setState({authors});
 			}.bind(this));
-			this.context.getter("filterColl",tofind,function(colls){
+			this.context.getter("filterColl",tf,function(colls){
 				this.setState({colls});
 			}.bind(this));
-			this.context.getter("filterTitle",tofind,function(titles){
+			this.context.getter("filterTitle",tf,function(titles){
+				console.log(titles.length)
 				this.setState({titles});
 			}.bind(this));			
 		}
@@ -43,7 +48,9 @@ var ResultList=React.createClass({
 	,highlight:function(text){
 		var out=[],previdx=0;
 		if (!text)return;
-		text.replace(this.props.tofind,function(m,idx){
+		var tofind=this.props.tofind;
+		var tf=(tofind[0]=="=")?tofind.substr(1):this.context.getter("expandVariant",tofind);	
+		text.replace(tf,function(m,idx){
 			out.push(text.substring(previdx,idx));
 			out.push(E("span",{key:idx,className:'hl'},m));
 			previdx=idx+m.length;
