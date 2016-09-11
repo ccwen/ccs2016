@@ -144,9 +144,10 @@ var SearchPanel=React.createClass({
 		var nTitle=this.refs['cat'+idx].dataset.title;
 		this.showTitle(nTitle);
 	}
-	,renderCategory:function(category,idx){
+	,renderCategory:function(category,idx,defaultValue){
 		if (!category.length)return null;
-		return E("select",{key:idx,className:"category",onChange:this.onSelectCat},
+		return E("select",{key:idx,className:"category",
+			onChange:this.onSelectCat,defaultValue},
 			category.map(function(cat,key){
 				return E("option",{key},cat);
 			})
@@ -156,6 +157,7 @@ var SearchPanel=React.createClass({
 		this.showTitle(e.target.dataset.title);
 	}
 	,renderContent:function(){
+		var selectedCat="";
 		var content=this.context.getter("contentOf",this.state.nColl);
 		var out=[],category=[],category_select=null,collCaption;
 		var opts={nTitle:this.context.getter("firstTitle",this.state.nColl)};
@@ -181,14 +183,17 @@ var SearchPanel=React.createClass({
 						var cat=line.replace("%","").trim();
 						var obj={key:'cat'+category.length,"data-title":opts.nTitle,ref:'cat'+category.length,
 						className:"clickable_cat",onClick:this.onCatClick};
-						out.push(E("div",obj,cat));	
+						out.push(E("div",obj,cat));
+						if (this.state.nTitle>=opts.nTitle) {
+							selectedCat=cat;
+						}
 						category.push(cat);
 					}
 				}
 			}
 		}
 		//insert subcategory dropdown collname
-		category_select=this.renderCategory(category,"cat");
+		category_select=this.renderCategory(category,"cat",selectedCat);
 		//add floating coll caption with category selector
 		out.unshift(E("div",{className:"floatingColl",key:"coll"},
 				E("span",{style:styles.coll},coll,collCaption)
