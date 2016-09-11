@@ -14,7 +14,7 @@ var SearchPanel=React.createClass({
 	}
 	,getInitialState:function(){
 		var value=document.location.hash.substr(1)||localStorage.getItem("ccs2016_tofind")||"";
-		return {value,tofind:"",oldTofind:""}
+		return {value,tofind:"",oldTofind:"",oldScrollTop:-1}
 	}
 	,componentDidMount:function(){
 		this.context.listen("setTofind",this.setTofind,this);
@@ -29,10 +29,14 @@ var SearchPanel=React.createClass({
 	}
 	,setTofind:function(tofind){
 		var oldTofind=this.state.oldTofind;
+		var oldScrollTop=-1;
 		if (tofind[0]=="@" && this.state.tofind[0]!=="@") {
 			oldTofind=this.state.tofind;
+			oldScrollTop=ReactDOM.findDOMNode(this.refs.scroller).scrollTop;
 		}
-		this.setState({tofind,value:tofind,oldTofind});
+		this.setState({tofind,value:tofind,oldTofind,oldScrollTop},function(){
+			ReactDOM.findDOMNode(this.refs.scroller).scrollTop=0;	
+		}.bind(this));
 	}
 	,dofilter:function(){
 		if (this.state.tofind!==this.state.value) {
@@ -47,7 +51,6 @@ var SearchPanel=React.createClass({
 		this.setState({value:e.target.value});
 		clearTimeout(this.timer);
 		this.timer=setTimeout(function(){
-			ReactDOM.findDOMNode(this.refs.scroller).scrollTop=0;
 			this.dofilter();
 		}.bind(this),300);
 	}
@@ -57,7 +60,10 @@ var SearchPanel=React.createClass({
 		}
 	}
 	,setOldTofind:function(){
-		this.setState({value:this.state.oldTofind,tofind:this.state.oldTofind,oldTofind:""});
+		var oldScrollTop=this.state.oldScrollTop;
+		this.setState({value:this.state.oldTofind,tofind:this.state.oldTofind,oldTofind:"",oldScrollTop:0},function(){
+			ReactDOM.findDOMNode(this.refs.scroller).scrollTop=oldScrollTop;
+		}.bind(this));
 	}
 	,renderOldTofind:function(){
 		if (this.state.oldTofind){
