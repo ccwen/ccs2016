@@ -2,7 +2,7 @@ var React=require("react");
 var ReactDOM=require("react-dom");
 var E=React.createElement;
 var PT=React.PropTypes;
-var MaxRange=200;
+var MaxRange=150;
 var styles={
 	scroller:{height:"100%",overflowY:"auto",overflowWrap:"normal"}
 }

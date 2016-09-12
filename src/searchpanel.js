@@ -70,15 +70,21 @@ var SearchPanel=React.createClass({
 			return E("span",{onClick:this.setOldTofind,className:"oldtofind"},this.state.oldTofind);
 		}
 	}
+	,renderAuthorMessage:function(){
+		if (this.state.value[0]=="@") {
+			return E("span",{},"之著作");
+		}
+	}
 	,render:function(){
 		return E("div",{style:styles.scroller,ref:"scroller"},
 			E("div",{className:"floatinginput"},
+				this.renderOldTofind(),
 				E("input",{size:5,style:styles.tofind,ref:"input",
 					placeholder:"查詢條件",
 				onKeyPress:this.onKeyPress,
 				onChange:this.onChange,
 				value:this.state.value}),
-				this.renderOldTofind()
+				this.renderAuthorMessage()
 			),
 			E("div",{},"　"),
 			E("div",{},"　"),
