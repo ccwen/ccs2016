@@ -34,7 +34,7 @@ var ResultList=React.createClass({
 				this.setState({colls});
 			}.bind(this));
 			this.context.getter("filterTitle",tf,function(titles){
-				console.log(titles.length)
+//				console.log(titles.length)
 				this.setState({titles});
 			}.bind(this));			
 		}

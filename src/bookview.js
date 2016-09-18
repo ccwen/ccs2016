@@ -22,7 +22,9 @@ var SearchPanel=React.createClass({
 	}
 	,showColl:function(nColl){
 		nColl=parseInt(nColl);
-		this.setState({nColl,nTitle:0,showloading:true});
+		var nTitle=this.context.getter("firstTitle",nColl);
+		this.scrollto='t'+nTitle;
+		this.setState({nColl,nTitle,showloading:true});
 	}
 	,showPage:function(nPage){
 		var first=this.context.getter("firstTitleOfPage",parseInt(nPage)-1);
