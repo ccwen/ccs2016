@@ -11,7 +11,6 @@ body {margin:0px;}
 .juan{color:darkgreen;font-size:70%;}
 .title_hl {color:white;background:#7f7fff;}
 .cat {color:brown}
-
 .author{color:teal;cursor:pointer;font-family: DFKai-SB}
 .dyn{color:gray;font-size:60%;}
 .floatinginput{border-radius:5px;position:fixed;z-index:200 ;left:200px;top:5px;opacity:0.8}
@@ -20,3 +19,6 @@ body {margin:0px;}
 .category{font-size:80%;background:silver;}
 .oldtofind{text-decoration:underline;cursor:pointer;color:blue;}
 .clickable_cat{text-decoration:underline;cursor:pointer;color:blue;}
+.pdf {background-image:url("icon_Download_pdf.png");background-repeat: no-repeat;}
+.pdftitle {color:darkgreen;cursor: pointer;text-decoration: underline}
+.chapterselect {font-size:80%;}
