@@ -2,6 +2,7 @@ var React=require("react");
 var E=React.createElement;
 var PT=React.PropTypes;
 var MaxItem=500;
+const archivePDF=require("./archivepdf");
 var styles={
 	coll:{fontSize:"80%",color:"#0f0f7f"}
 }
@@ -28,8 +29,10 @@ var TitleResult=React.createClass({
 	}
 	,renderItem:function(item,key){
 		return E("div",{key,className:"title"},
-			key+1+".",this.props.highlight(item[0]),
-			this.renderColl(item[1]));
+			key+1+".",
+			archivePDF.call(this,{},item[1],this.props.highlight(item[0]),key),
+			this.renderColl(item[1])
+		);
 	}
 	,shouldComponentUpdate:function(nextProps){
 		return (nextProps.titles!==this.props.titles);

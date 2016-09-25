@@ -7,7 +7,82 @@ ksanagap.boot("ccs2016",function(){
 	var Main=React.createElement(require("./src/main.jsx"));
 	ksana.mainComponent=ReactDOM.render(Main,document.getElementById("main"));
 });
-},{"./src/main.jsx":"C:\\ksana2015\\ccs2016\\src\\main.jsx","ksana2015-webruntime/ksanagap":"C:\\ksana2015\\node_modules\\ksana2015-webruntime\\ksanagap.js","ksana2015-webruntime/livereload":"C:\\ksana2015\\node_modules\\ksana2015-webruntime\\livereload.js","react":"react","react-dom":"react-dom"}],"C:\\ksana2015\\ccs2016\\src\\authorresult.js":[function(require,module,exports){
+},{"./src/main.jsx":"C:\\ksana2015\\ccs2016\\src\\main.jsx","ksana2015-webruntime/ksanagap":"C:\\ksana2015\\node_modules\\ksana2015-webruntime\\ksanagap.js","ksana2015-webruntime/livereload":"C:\\ksana2015\\node_modules\\ksana2015-webruntime\\livereload.js","react":"react","react-dom":"react-dom"}],"C:\\ksana2015\\ccs2016\\src\\archivepdf.js":[function(require,module,exports){
+const React=require("react");
+E=React.createElement;
+const clickpdf=function(e){
+	var t=e.target;
+	if (!e.target.dataset['id']) t=t.parentElement; //deal with highlight text
+	var select=t.nextSibling;
+	if (!t.nextSibling) {
+		select=t.childNodes[t.childNodes.length-1];
+	}
+
+	const option=select.options[select.selectedIndex];
+	var pdf=option.dataset.pdf;
+	pdf&&openpdf(pdf);
+}
+const url="https://archive.org/download/@.cn/@.cn.pdf";
+const openpdf=function(pdf){
+	var u=url.replace(/@/g,pdf);
+	window.open(u);
+}
+const clickonepdf=function(e){
+	var pdf=e.target.dataset.pdf;
+	if (!pdf) pdf=e.target.parentElement.dataset.pdf;
+	pdf&&openpdf(pdf);
+}
+const nop=function(e){
+	e.preventDefault();
+	e.stopPropagation();
+};
+const renderChapter=function(pdf,title){
+	var chapters=pdf.split(",");
+	var i;
+	if (chapters.length==1) {
+		var c=chapters[0];
+		const len=c.length;
+		var at=c.indexOf('-');
+		if (at>-1) {
+			count=parseInt(c.substr(at+1),10);
+			c=parseInt(c.substr(0,at));
+			chapters=[];
+			for (i=0;i<count;i++) {
+				nextid="0000000"+(c+i);
+				nextid=nextid.substr(nextid.length-at);
+				chapters.push(nextid);
+			}
+		}
+	}
+	var out=[];
+	if (chapters.length>1) {
+		for (var i=0;i<chapters.length;i++) {
+			out.push(E("option",{key:i,"data-pdf":chapters[i]},"第"+(i+1)+"冊"));
+		}
+		return E("span",{"data-id":"pdf",onClick:clickpdf},title,[
+			 E("span", {key:"button",className:"pdf"},"　"),
+			,E("select",{key:"select",className:"chapterselect",onClick:nop},out)
+			]);		
+	} else {
+		return E("span",{"data-pdf":chapters[0],onClick:clickonepdf},title,
+			 E("span", {key:"button",className:"pdf"},"　")
+			);
+	}
+}
+const renderPDF=function(obj,nTitle,title){
+	var pdf=this.context.getter("getPDF",nTitle);
+	if(pdf) {
+		obj.className="pdftitle"
+		//obj["data-pdf"]=pdf;
+		//obj.onClick=openpdf;
+		return E("span",obj,renderChapter(pdf,title));
+	} else {
+		return E("span",obj,title);
+	}
+}
+
+module.exports=renderPDF;
+},{"react":"react"}],"C:\\ksana2015\\ccs2016\\src\\authorresult.js":[function(require,module,exports){
 var React=require("react");
 var E=React.createElement;
 var PT=React.PropTypes;
@@ -62,6 +137,7 @@ var ReactDOM=require("react-dom");
 var E=React.createElement;
 var PT=React.PropTypes;
 var MaxRange=150;
+const archivePDF=require("./archivepdf");
 var styles={
 	scroller:{height:"100%",overflowY:"auto",overflowWrap:"normal"}
 }
@@ -128,6 +204,7 @@ var SearchPanel=React.createClass({displayName: "SearchPanel",
 		return [E("span",{className:"version"},"，",libs.length,"館藏"),
 						E("select",{className:"lib",key},out)];
 	}
+
 	,renderBookTitle:function(line,key,opts){
 		var i=0,out=[],text="";;
 		var emitNormalText=function(key){
@@ -149,7 +226,8 @@ var SearchPanel=React.createClass({displayName: "SearchPanel",
 				}
 				if (title[0]=="!") title=title.substr(1);
 				if (title[0]=="-") title="　"+title.substr(1);
-				inrange&&out.push(E("span",obj,title));
+				inrange&&out.push(archivePDF.call(this,obj,opts.nTitle,title));
+
 				var m=line.substr(i+1).match(/^(\d+)/);
 				if (m) {
 						inrange&&out.push(E("span",{className:"juan",key:'j'+i},m[0],"卷 "));
@@ -279,7 +357,7 @@ var SearchPanel=React.createClass({displayName: "SearchPanel",
 	}
 });
 module.exports=SearchPanel;
-},{"react":"react","react-dom":"react-dom"}],"C:\\ksana2015\\ccs2016\\src\\collresult.js":[function(require,module,exports){
+},{"./archivepdf":"C:\\ksana2015\\ccs2016\\src\\archivepdf.js","react":"react","react-dom":"react-dom"}],"C:\\ksana2015\\ccs2016\\src\\collresult.js":[function(require,module,exports){
 var React=require("react");
 var E=React.createElement;
 var PT=React.PropTypes;
@@ -641,7 +719,6 @@ var SearchPanel=React.createClass({displayName: "SearchPanel",
 module.exports=SearchPanel;
 },{"./resultlist":"C:\\ksana2015\\ccs2016\\src\\resultlist.js","react":"react","react-dom":"react-dom"}],"C:\\ksana2015\\ccs2016\\src\\store.js":[function(require,module,exports){
 var data=require("dataset");
-
 var {action,listen,unlistenAll,getter,registerGetter,unregisterGetter}=require("./model");
 
 var filter=function(strtable,tofind,cb){
@@ -740,6 +817,9 @@ var expandVariant=function(tofind){
 	}
 	return new RegExp(tf);
 }
+var getPDF=function(titleid){
+	return data.archive[titleid];
+}
 registerGetter("filterAuthor",filterAuthor);
 registerGetter("titleByAuthor",titleByAuthor);
 registerGetter("filterTitle",filterTitle);
@@ -755,11 +835,13 @@ registerGetter("firstTitle",firstTitle);
 registerGetter("firstTitleOfPage",firstTitleOfPage);
 registerGetter("dynastyByCode",dynastyByCode);
 registerGetter("expandVariant",expandVariant);
+registerGetter("getPDF",getPDF);
 },{"./model":"C:\\ksana2015\\ccs2016\\src\\model.js","dataset":"dataset"}],"C:\\ksana2015\\ccs2016\\src\\titleresult.js":[function(require,module,exports){
 var React=require("react");
 var E=React.createElement;
 var PT=React.PropTypes;
 var MaxItem=500;
+const archivePDF=require("./archivepdf");
 var styles={
 	coll:{fontSize:"80%",color:"#0f0f7f"}
 }
@@ -786,8 +868,10 @@ var TitleResult=React.createClass({displayName: "TitleResult",
 	}
 	,renderItem:function(item,key){
 		return E("div",{key,className:"title"},
-			key+1+".",this.props.highlight(item[0]),
-			this.renderColl(item[1]));
+			key+1+".",
+			archivePDF.call(this,{},item[1],this.props.highlight(item[0]),key),
+			this.renderColl(item[1])
+		);
 	}
 	,shouldComponentUpdate:function(nextProps){
 		return (nextProps.titles!==this.props.titles);
@@ -815,7 +899,7 @@ var TitleResult=React.createClass({displayName: "TitleResult",
 });
 module.exports=TitleResult;
 
-},{"react":"react"}],"C:\\ksana2015\\node_modules\\ksana2015-webruntime\\downloader.js":[function(require,module,exports){
+},{"./archivepdf":"C:\\ksana2015\\ccs2016\\src\\archivepdf.js","react":"react"}],"C:\\ksana2015\\node_modules\\ksana2015-webruntime\\downloader.js":[function(require,module,exports){
 
 var userCancel=false;
 var files=[];

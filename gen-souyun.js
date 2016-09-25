@@ -11,6 +11,9 @@ const bookid=fs.readFileSync("bookid.txt","utf8").split(/\r?\n/);
 var errorbooks=[];
 const compressChapter=function(chapters,id){
 	chapters.sort();
+	var prefix=chapters[0];
+	var at =prefix.indexOf(",");
+	prefix=prefix.substr(0,at);
 	var first,now,p=0,cont=true,idarr=[];
 	for (var i=0;i<chapters.length;i++) {
 		now=parseInt(chapters[i],10);
@@ -21,9 +24,18 @@ const compressChapter=function(chapters,id){
 		}
 		if (!p) first=now;
 		p=now;
-		idarr.push(now);
+		var id=chapters[i];
+		at=id.indexOf(",");
+		idarr.push(id.substr(0,at));
 	}
-	if (cont) return first+"-"+(now-first);
+	if (cont) {
+		if (now-first>1) {
+			return prefix+"-"+(now-first);	
+		} else {
+			return prefix;
+		}
+		
+	}
 	else return idarr.join("|");
 }
 const findChapter=function(book){

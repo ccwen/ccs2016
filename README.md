@@ -13,3 +13,5 @@ node wget-souyun //get links to archive.org
 node gen-souyun //generate title name to archive.org mapping books-archive.json
 
 node matcharchive //create archive property, titles.txt
+copy archive.js ../ccs  //copy archive.js to ccs  (ksanaforge/ccs)
+build-data   //rebuil data

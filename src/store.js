@@ -1,5 +1,4 @@
 var data=require("dataset");
-
 var {action,listen,unlistenAll,getter,registerGetter,unregisterGetter}=require("./model");
 
 var filter=function(strtable,tofind,cb){
@@ -98,6 +97,9 @@ var expandVariant=function(tofind){
 	}
 	return new RegExp(tf);
 }
+var getPDF=function(titleid){
+	return data.archive[titleid];
+}
 registerGetter("filterAuthor",filterAuthor);
 registerGetter("titleByAuthor",titleByAuthor);
 registerGetter("filterTitle",filterTitle);
@@ -113,3 +115,4 @@ registerGetter("firstTitle",firstTitle);
 registerGetter("firstTitleOfPage",firstTitleOfPage);
 registerGetter("dynastyByCode",dynastyByCode);
 registerGetter("expandVariant",expandVariant);
+registerGetter("getPDF",getPDF);

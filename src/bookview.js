@@ -3,6 +3,7 @@ var ReactDOM=require("react-dom");
 var E=React.createElement;
 var PT=React.PropTypes;
 var MaxRange=150;
+const archivePDF=require("./archivepdf");
 var styles={
 	scroller:{height:"100%",overflowY:"auto",overflowWrap:"normal"}
 }
@@ -69,6 +70,7 @@ var SearchPanel=React.createClass({
 		return [E("span",{className:"version"},"，",libs.length,"館藏"),
 						E("select",{className:"lib",key},out)];
 	}
+
 	,renderBookTitle:function(line,key,opts){
 		var i=0,out=[],text="";;
 		var emitNormalText=function(key){
@@ -90,7 +92,8 @@ var SearchPanel=React.createClass({
 				}
 				if (title[0]=="!") title=title.substr(1);
 				if (title[0]=="-") title="　"+title.substr(1);
-				inrange&&out.push(E("span",obj,title));
+				inrange&&out.push(archivePDF.call(this,obj,opts.nTitle,title));
+
 				var m=line.substr(i+1).match(/^(\d+)/);
 				if (m) {
 						inrange&&out.push(E("span",{className:"juan",key:'j'+i},m[0],"卷 "));
