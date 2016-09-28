@@ -15,3 +15,13 @@ node gen-souyun //generate title name to archive.org mapping books-archive.json
 node matcharchive //create archive property, titles.txt
 copy archive.js ../ccs  //copy archive.js to ccs  (ksanaforge/ccs)
 build-data   //rebuil data
+
+
+
+TODO
+and editor for building title id  and PDF mapping
+title id : page number + seq
+
+right side : title filter, click to bring title id to right side
+use node webkit
+
